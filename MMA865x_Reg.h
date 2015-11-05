@@ -142,7 +142,7 @@ public:
 
   union XyzDataCfgRegT // Register 0x0E XYZ_DATA_CFG Datasheet p. 31
   {
-    enum accelFsrT
+    enum AccelFsrT
     {
       AFS_2g = 0, AFS_4g, AFS_8g
     };

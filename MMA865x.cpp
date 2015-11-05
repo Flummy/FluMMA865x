@@ -7,7 +7,8 @@
 #include "AccelDataT.h"
 #define MMA8652Q_ID       0x04A // MMA8653Q_ID 0x5A
 
-MMA865x_Reg::XyzDataCfgRegT::accelFsrT MMA865x::fullScaleRange = MMA865x_Reg::XyzDataCfgRegT::AFS_2g;
+MMA865x_Reg::XyzDataCfgRegT::AccelFsrT MMA865x::fullScaleRange = MMA865x_Reg::XyzDataCfgRegT::AFS_2g;
+MMA865x_Reg::CtrlReg1T::AccelOdrT MMA865x::outputDataRate = MMA865x_Reg::CtrlReg1T::AODR_50HZ;
 
 void MMA865x::begin()
 {
@@ -61,10 +62,11 @@ AccelDataT<int16_t> MMA865x::readAccelData()
 }
 
 
-float MMA865x::getConversionFactor()
+// Factor needed to convert assembledData lsb units to milligrav
+uint16_t MMA865x::getConversionFactorMicrograv()
 {
   static const byte rezTab[] PROGMEM = {2, 4, 8};
-  return pgm_read_byte_near(rezTab + fullScaleRange) / 2048.0;
+  return (pgm_read_byte_near(rezTab + fullScaleRange) * 1000000UL) / 2048UL;
 }
 
 
@@ -109,12 +111,9 @@ void MMA865x::calibrate()
   reg.z = (-bias.z / 2) & 0xFF; // get average values
   
   standby();  // Must be in standby to change registers
-  
   i2c.writeByte(MMA865x_Reg::OFF_X, reg.x); // X-axis compensation  
   i2c.writeByte(MMA865x_Reg::OFF_Y, reg.y); // Y-axis compensation  
   i2c.writeByte(MMA865x_Reg::OFF_Z, reg.z); // z-axis compensation 
-
   active();  // Set to active to start reading
-
 }
 

@@ -15,8 +15,8 @@ class MMA865x
 public:
 
   static MMA865x_I2C i2c; // "instantiating" a class with static methods multiple times causes no memory overhead
-  static MMA865x_Reg::XyzDataCfgRegT::accelFsrT fullScaleRange;
-
+  static MMA865x_Reg::XyzDataCfgRegT::AccelFsrT fullScaleRange;
+  static MMA865x_Reg::CtrlReg1T::AccelOdrT outputDataRate;
 
 
   static void       begin();
@@ -25,6 +25,6 @@ public:
   static void       standby();       // Device must be in standby mode for most config register changes
   static void       active();        // Device must be in active mode to provide data
   static AccelDataT<int16_t> readAccelData();
-  static float      getConversionFactor();
+  static uint16_t            getConversionFactorMicrograv();
   static void       calibrate();
 };
