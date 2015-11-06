@@ -19,6 +19,16 @@ union AccelDataT
 
    //AccelDataT & operator=(const AccelDataT &rhs) { return *this; }
 
+  template <typename B>
+  AccelDataT& operator=(const AccelDataT<B> &rhs)
+  {
+    this->x = (T) rhs.x;
+    this->y = (T) rhs.y;
+    this->z = (T) rhs.z;
+    return *this;
+  }
+
+
    template <typename B>
    AccelDataT operator+(const AccelDataT<B> &rhs)
    {
@@ -95,4 +105,46 @@ union AccelDataT
       this->z = this->z / (T) rhs;
       return *this;
    }
+
+// xxx
+   template <typename B>
+   AccelDataT operator*(const AccelDataT<B> &rhs)
+   {
+      AccelDataT<T> tmp;
+      tmp.x = this->x * (T) rhs.x;
+      tmp.y = this->y * (T) rhs.y;
+      tmp.z = this->z * (T) rhs.z;
+      return tmp;
+   }
+
+   template <typename SCALAR>
+   AccelDataT operator*(const SCALAR &rhs)
+   {
+      AccelDataT<T> tmp;
+      tmp.x = this->x * (T) rhs;
+      tmp.y = this->y * (T) rhs;
+      tmp.z = this->z * (T) rhs;
+      return tmp;
+   }
+
+
+   template <typename B>
+   AccelDataT& operator *=(const AccelDataT<B> &rhs)
+   {
+      this->x = this->x * (T) rhs.x;
+      this->y = this->y * (T) rhs.y;
+      this->z = this->z * (T) rhs.z;
+      return *this;
+   }
+
+   template <typename SCALAR>
+   AccelDataT& operator *=(const SCALAR &rhs)
+   {
+      this->x = this->x * (T) rhs;
+      this->y = this->y * (T) rhs;
+      this->z = this->z * (T) rhs;
+      return *this;
+   }
+
+
 };

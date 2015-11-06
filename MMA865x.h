@@ -24,7 +24,7 @@ public:
   static boolean    devicePresent(); // Request device-specific ID
   static void       standby();       // Device must be in standby mode for most config register changes
   static void       active();        // Device must be in active mode to provide data
-  static AccelDataT<int16_t> readAccelData();
+  static AccelDataT<int16_t> readData();
   static uint16_t            getConversionFactorMicrograv();
   static void       calibrate();
 };

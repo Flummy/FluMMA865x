@@ -50,7 +50,7 @@ void MMA865x::active()
 }
 
 
-AccelDataT<int16_t> MMA865x::readAccelData()
+AccelDataT<int16_t> MMA865x::readData()
 {
   uint8_t rawData[6];  // x/y/z accel register data stored here
   AccelDataT<int16_t> assembledData;
@@ -79,7 +79,7 @@ void MMA865x::calibrate()
   uint8_t rawData[6];  // x/y/z FIFO accel data stored here
 
   // Clear all interrupts by reading the data output and F_STATUS registers
-  temp = readAccelData();
+  temp = readData();
   i2c.readByte(MMA865x_Reg::F_STATUS);
   
   standby();  // Must be in standby to change registers
@@ -95,7 +95,7 @@ void MMA865x::calibrate()
 
   for(ii = 0; ii < fcount; ii++)   // construct count sums for each axis
   {
-    temp = readAccelData(); 
+    temp = readData(); 
     bias += temp;
     delay(15);  // wait for a new data reading (100 Hz)
   }
@@ -105,15 +105,15 @@ void MMA865x::calibrate()
   if(bias.z > 0L) {bias.z -= (int32_t) accelsensitivity;}  // Remove gravity from the z-axis
   else {bias.z += (int32_t) accelsensitivity;}
 
-  // weirdness from upstream:
+  // weirdness from upstream:   // TODO
   reg.x = (-bias.x / 2) & 0xFF; // get average values
   reg.y = (-bias.y / 2) & 0xFF; // get average values
   reg.z = (-bias.z / 2) & 0xFF; // get average values
   
-  standby();  // Must be in standby to change registers
+  standby();  // Must be in standby mode to change registers
   i2c.writeByte(MMA865x_Reg::OFF_X, reg.x); // X-axis compensation  
   i2c.writeByte(MMA865x_Reg::OFF_Y, reg.y); // Y-axis compensation  
   i2c.writeByte(MMA865x_Reg::OFF_Z, reg.z); // z-axis compensation 
-  active();  // Set to active to start reading
+  active();  // Set to active mode to start reading
 }
 
