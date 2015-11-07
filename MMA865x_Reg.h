@@ -130,9 +130,11 @@ public:
     {
       Serial << F("intSourceReg=");
       if(SRC_DRDY)   Serial << F("DRDY ");
+      if(SRC_RSVD)   Serial << F("RSVD! ");
       if(SRC_FF_MT)  Serial << F("FF_MT ");
       if(SRC_PULSE)  Serial << F("PULSE ");
       if(SRC_LNDPRT) Serial << F("LNDPRT ");
+      if(SRC_TRANS)  Serial << F("TRANS ");
       if(SRC_FIFO)   Serial << F("FIFO ");
       if(SRC_ASLP)   Serial << F("ASLP");
       Serial << "\n";

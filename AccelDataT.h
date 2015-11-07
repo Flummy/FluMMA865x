@@ -28,6 +28,13 @@ union AccelDataT
     return *this;
   }
 
+  AccelDataT& operator-()
+  {
+    this->x = -this->x;
+    this->y = -this->y;
+    this->z = -this->z;
+    return *this;
+  }
 
    template <typename B>
    AccelDataT operator+(const AccelDataT<B> &rhs)

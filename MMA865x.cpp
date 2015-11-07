@@ -50,6 +50,12 @@ void MMA865x::active()
 }
 
 
+void MMA865x::clearInterrupts()
+{
+  (void) readData(); // Clear all interrupts by reading the data output and F_STATUS registers
+  (void) i2c.readByte(MMA865x_Reg::F_STATUS);
+}
+
 AccelDataT<int16_t> MMA865x::readData()
 {
   uint8_t rawData[6];  // x/y/z accel register data stored here
@@ -66,7 +72,14 @@ AccelDataT<int16_t> MMA865x::readData()
 uint16_t MMA865x::getConversionFactorMicrograv()
 {
   static const byte rezTab[] PROGMEM = {2, 4, 8};
-  return (pgm_read_byte_near(rezTab + fullScaleRange) * 1000000UL) / 2048UL;
+  return ((unsigned long)pgm_read_byte_near(rezTab + fullScaleRange) * 1000000UL) / 2048UL;
+}
+
+
+float MMA865x::getConversionFactorMilligrav()
+{
+  static const byte rezTab[] PROGMEM = {2, 4, 8};
+  return ((unsigned long)pgm_read_byte_near(rezTab + fullScaleRange) * 1000UL) / 2048.0;
 }
 
 
@@ -78,10 +91,7 @@ void MMA865x::calibrate()
   AccelDataT<uint8_t> reg;
   uint8_t rawData[6];  // x/y/z FIFO accel data stored here
 
-  // Clear all interrupts by reading the data output and F_STATUS registers
-  temp = readData();
-  i2c.readByte(MMA865x_Reg::F_STATUS);
-  
+  clearInterrupts(); // TODO after standby?
   standby();  // Must be in standby to change registers
 
   i2c.writeByte(MMA865x_Reg::CTRL_REG1, 0x01);      // select 100 Hz ODR
@@ -105,11 +115,10 @@ void MMA865x::calibrate()
   if(bias.z > 0L) {bias.z -= (int32_t) accelsensitivity;}  // Remove gravity from the z-axis
   else {bias.z += (int32_t) accelsensitivity;}
 
-  // weirdness from upstream:   // TODO
-  reg.x = (-bias.x / 2) & 0xFF; // get average values
-  reg.y = (-bias.y / 2) & 0xFF; // get average values
-  reg.z = (-bias.z / 2) & 0xFF; // get average values
-  
+  Serial << F("bias x=") << bias.x << "\ty=" << bias.y << "\tz=" << bias.z << "mg\n";
+
+  reg = -bias / 2; // assumes uint8_t
+
   standby();  // Must be in standby mode to change registers
   i2c.writeByte(MMA865x_Reg::OFF_X, reg.x); // X-axis compensation  
   i2c.writeByte(MMA865x_Reg::OFF_Y, reg.y); // Y-axis compensation  
