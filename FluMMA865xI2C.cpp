@@ -1,6 +1,6 @@
 // -*- mode: C++; tab-width: 2; c-basic-offset: 2; indent-tabs-mode: nil; coding: utf-8 -*-
 //    MMA865x Accelerometer Driver Library for Arduino, Version 1, 2015-11-12
-//    http://koffein.org/MMA865x/
+//    http://koffein.org/E/FluMMA865x/
 //    This work is based on the efforts of other open source engineers, please see Credits.txt
 //    Copyright (c) 2015 Herwig Wittmann <lab15@koffein.org>
 //
