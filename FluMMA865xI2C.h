@@ -21,7 +21,7 @@
 
 #include <Arduino.h>
 
-class MMA865x_I2C
+class FluMMA865xI2C
 {
 
 public:

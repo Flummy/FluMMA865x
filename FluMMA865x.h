@@ -24,17 +24,17 @@
 #pragma once
 
 #include <Arduino.h>
-#include "MMA865x_I2C.h"
-#include "MMA865x_Reg.h"
+#include "FluMMA865xI2C.h"
+#include "FluMMA865xReg.h"
 #include "AccelDataT.h"
 
-class MMA865x
+class FluMMA865x
 {
 public:
 
-  static MMA865x_I2C i2c; // "instantiating" a class with static methods multiple times causes no memory overhead
-  static MMA865x_Reg::XyzDataCfgRegT::AccelFsrT fullScaleRange;
-  static MMA865x_Reg::CtrlReg1T::AccelOdrT outputDataRate;
+  static FluMMA865xI2C i2c; // "instantiating" a class with static methods multiple times causes no memory overhead
+  static FluMMA865xR::XyzDataCfgRegT::AccelFsrT fullScaleRange;
+  static FluMMA865xR::CtrlReg1T::AccelOdrT      outputDataRate;
 
 
   static void     begin();

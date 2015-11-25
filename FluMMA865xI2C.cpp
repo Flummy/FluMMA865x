@@ -18,14 +18,14 @@
 //    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 #include <Wire.h>
-#include "MMA865x_I2C.h"
+#include "FluMMA865xI2C.h"
 
 
 //#define MMA8652_ADDRESS 0x1C  // Sparkfun breakout board jumper SA0 set
 #define MMA8652_ADDRESS   0x1D  // Sparkfun breakout board jumper SA0 open (default)
 
 
-void MMA865x_I2C::writeByte(const uint8_t subAddress, const uint8_t data)
+void FluMMA865xI2C::writeByte(const uint8_t subAddress, const uint8_t data)
 {
 	Wire.beginTransmission(MMA8652_ADDRESS);  // Initialize the Tx buffer
 	Wire.write(subAddress);           // Put slave register address in Tx buffer
@@ -34,7 +34,7 @@ void MMA865x_I2C::writeByte(const uint8_t subAddress, const uint8_t data)
 }
 
 
-uint8_t MMA865x_I2C::readByte(const uint8_t subAddress)
+uint8_t FluMMA865xI2C::readByte(const uint8_t subAddress)
 {
 	Wire.beginTransmission(MMA8652_ADDRESS); // Initialize the Tx buffer
 	Wire.write(subAddress);	                 // Put slave register address in Tx buffer
@@ -44,7 +44,7 @@ uint8_t MMA865x_I2C::readByte(const uint8_t subAddress)
 }
 
 
-void MMA865x_I2C::readBytes(const uint8_t subAddress, const uint8_t count, uint8_t * const dest)
+void FluMMA865xI2C::readBytes(const uint8_t subAddress, const uint8_t count, uint8_t * const dest)
 {  
   uint8_t i = 0;
 	Wire.beginTransmission(MMA8652_ADDRESS);   // Initialize the Tx buffer

@@ -47,7 +47,7 @@
 #include <Streaming.h>
 
 
-class MMA865x_Reg
+class FluMMA865xR
 {
 public:
   enum RegisterList
