@@ -1,0 +1,13 @@
+Hardware setup
+**************
+
+ MMA8652 Breakout ------------ Arduino
+ 3.3V ------------------------ 3.3V
+ SDA ------------------------- Analog 4
+ SCL ------------------------- Analog 5
+ INT2 ------------------------ Digital 5
+ INT1 ------------------------ Digital 4
+ GND ------------------------- GND
+ 
+ SDA and SCL should have external pull-up resistors (to 3.3V).
+ 10k resistors are on the FRDM-FXS-MULTI breakout board.

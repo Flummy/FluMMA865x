@@ -1,0 +1,38 @@
+MMA865x Accelerometer Driver Library for Arduino, Version 1, 2015-11-12
+http://koffein.org/MMA865x/
+Copyright (c) 2015 Herwig Wittmann <lab15@koffein.org>
+Released under the GNU Affero General Public License version 3 or later
+
+
+This work is based on the efforts of other open source engineers:
+
+
+Original sketch by: Jim Lindblom, SparkFun Electronics
+******************************************************
+Date:    November 17, 2011
+license: Beerware - Use this code however you'd like. If you find it useful
+         you can buy me a beer some time.
+
+
+Modified by: Kris Winer
+***********************
+Date:    May 27, 2014 
+         Modified to include reset, accelerometer calibration, sleep mode
+         functionality as well as parameterizing the register addresses.
+         Added LCD functions to allow display to on breadboard monitor
+         and motion detection, etc.
+
+
+Wrapped into an Arduino library by Herwig Wittmann
+Date:    November 12, 2015
+
+
+Primary hardware information from: Freescale, Inc.
+**************************************************
+Freescale MMA865xQ Driver
+Description: Driver header file for Freescale MMA8652Q and MMA8653Q accelerometers
+(c) Copyright 2011, Freescale, Inc.  All rights reserved.
+
+http://www.freescale.com/products/sensors/accelerometers/3-axis-accelerometers/2g-4g-8g-low-g-12-bit-digital-accelerometer:MMA8652FC
+
+

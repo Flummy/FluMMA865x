@@ -1,5 +1,23 @@
 // -*- mode: C++; tab-width: 2; c-basic-offset: 2; indent-tabs-mode: nil; coding: utf-8 -*-
-// (c) Flummy 2015 <lab15@koffein.org> All rights reserved.
+//    MMA865x Accelerometer Driver Library for Arduino, Version 1, 2015-11-12
+//    http://koffein.org/MMA865x/
+//    This work is based on the efforts of other open source engineers, please see Credits.txt
+//    Copyright (c) 2015 Herwig Wittmann <lab15@koffein.org>
+//
+//    This program is free software: you can redistribute it and/or modify
+//    it under the terms of the GNU Affero General Public License as published by
+//    the Free Software Foundation, either version 3 of the License, or
+//    (at your option) any later version.
+//
+//    This program is distributed in the hope that it will be useful,
+//    but WITHOUT ANY WARRANTY; without even the implied warranty of
+//    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+//    GNU Affero General Public License for more details.
+//
+//    You should have received a copy of the GNU Affero General Public License
+//    along with this program.  If not, see <http://www.gnu.org/licenses/>.
+
+// Hardware setup: See HardwareSetup.txt
 
 #include "MMA865x.h"
 #include "MMA865x_I2C.h"
@@ -18,9 +36,9 @@ void MMA865x::begin()
 void MMA865x::reset()
 {
   MMA865x_Reg::CtrlReg2T ctrlReg2;
-  ctrlReg2.value = 0;
-  ctrlReg2.RST = true; // Set reset flag
-  i2c.writeByte(MMA865x_Reg::CTRL_REG2, ctrlReg2.value);
+  ctrlReg2.v = 0;
+  ctrlReg2.f.RST = true; // Set reset flag
+  i2c.writeByte(MMA865x_Reg::CTRL_REG2, ctrlReg2.v);
   delay(2); // 2ms delay guessed, not from datasheet, single test IC: 200us ok at room temp
 }
 
@@ -35,18 +53,18 @@ boolean MMA865x::devicePresent()
 void MMA865x::standby()
 {
   MMA865x_Reg::CtrlReg1T ctrlReg1; 
-  ctrlReg1.value = i2c.readByte(MMA865x_Reg::CTRL_REG1);
-  ctrlReg1.ACTIVE = false;
-  i2c.writeByte(MMA865x_Reg::CTRL_REG1, ctrlReg1.value);
+  ctrlReg1.v = i2c.readByte(MMA865x_Reg::CTRL_REG1);
+  ctrlReg1.f.ACTIVE = false;
+  i2c.writeByte(MMA865x_Reg::CTRL_REG1, ctrlReg1.v);
 }
 
 
 void MMA865x::active()
 {
   MMA865x_Reg::CtrlReg1T ctrlReg1; 
-  ctrlReg1.value = i2c.readByte(MMA865x_Reg::CTRL_REG1);
-  ctrlReg1.ACTIVE = true;
-  i2c.writeByte(MMA865x_Reg::CTRL_REG1, ctrlReg1.value);  
+  ctrlReg1.v = i2c.readByte(MMA865x_Reg::CTRL_REG1);
+  ctrlReg1.f.ACTIVE = true;
+  i2c.writeByte(MMA865x_Reg::CTRL_REG1, ctrlReg1.v);  
 }
 
 
@@ -61,9 +79,9 @@ AccelDataT<int16_t> MMA865x::readData()
   uint8_t rawData[6];  // x/y/z accel register data stored here
   AccelDataT<int16_t> assembledData;
   i2c.readBytes(MMA865x_Reg::OUT_X_MSB, 6, &rawData[0]);  // Read the six raw data registers into data array
-  assembledData.xyz[0] = ((int16_t) rawData[0] << 8 | rawData[1]) >> 4; // needs less flash than a loop
-  assembledData.xyz[1] = ((int16_t) rawData[2] << 8 | rawData[3]) >> 4;
-  assembledData.xyz[2] = ((int16_t) rawData[4] << 8 | rawData[5]) >> 4;
+  assembledData.xyz[0] = 1 + (((int16_t) rawData[0] << 8 | rawData[1]) >> 4); // needs less flash than a loop
+  assembledData.xyz[1] = 1 + (((int16_t) rawData[2] << 8 | rawData[3]) >> 4);
+  assembledData.xyz[2] = 1 + (((int16_t) rawData[4] << 8 | rawData[5]) >> 4);
   return assembledData;
 }
 
@@ -86,10 +104,10 @@ float MMA865x::getConversionFactorMilligrav()
 void MMA865x::calibrate()
 {
   uint16_t ii, fcount;
-  AccelDataT<int16_t> temp;
   AccelDataT<int32_t> bias = {0, 0, 0};
   AccelDataT<uint8_t> reg;
   uint8_t rawData[6];  // x/y/z FIFO accel data stored here
+
 
   clearInterrupts(); // TODO after standby?
   standby();  // Must be in standby to change registers
@@ -101,15 +119,15 @@ void MMA865x::calibrate()
   uint16_t accelsensitivity = 1024;                 // 1024 LSB/g
 
   active();  // Set to active to start collecting data
-   
+  delay(2000); // wait for device to settle
+  clearInterrupts();
 
   for(ii = 0; ii < fcount; ii++)   // construct count sums for each axis
   {
-    temp = readData(); 
-    bias += temp;
-    delay(15);  // wait for a new data reading (100 Hz)
+    bias += readData(); // was AccelDataT<int16_t> temp = readData();
+    delay(15);
   }
- 
+
   bias /= fcount;
   
   if(bias.z > 0L) {bias.z -= (int32_t) accelsensitivity;}  // Remove gravity from the z-axis
@@ -120,9 +138,13 @@ void MMA865x::calibrate()
   reg = -bias / 2; // assumes uint8_t
 
   standby();  // Must be in standby mode to change registers
+  delay(1);
   i2c.writeByte(MMA865x_Reg::OFF_X, reg.x); // X-axis compensation  
+  delay(1);
   i2c.writeByte(MMA865x_Reg::OFF_Y, reg.y); // Y-axis compensation  
+  delay(1);
   i2c.writeByte(MMA865x_Reg::OFF_Z, reg.z); // z-axis compensation 
+  delay(1);
   active();  // Set to active mode to start reading
 }
 
