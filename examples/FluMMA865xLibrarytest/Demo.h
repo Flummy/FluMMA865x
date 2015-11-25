@@ -1,7 +1,6 @@
 // -*- mode: C++; tab-width: 2; c-basic-offset: 2; indent-tabs-mode: nil; coding: utf-8 -*-
-//    MMA865x Accelerometer Driver Library for Arduino, Version 0.1.0, 2015-11-12
+//    Example for MMA865x Accelerometer Driver Library for Arduino, Version 0.1.0, 2015-11-12
 //    http://koffein.org/E/FluMMA865x/
-//    Version numbering follows the http://www.semver.org Semantic Versioning 2.0.0 specification
 //    This work is based on the efforts of other open source engineers, please see Credits.txt
 //    Copyright (c) 2015 Herwig Wittmann <lab15@koffein.org>
 //
@@ -20,13 +19,14 @@
 
 #pragma once
 
-#include <Arduino.h>
-
-class FluMMA865xI2C
+class Demo
 {
-
 public:
-  static void    writeByte(const uint8_t subAddress, const uint8_t data);
-  static uint8_t readByte(const uint8_t subAddress);
-  static void    readBytes(const uint8_t subAddress, const uint8_t count, uint8_t * const dest);
+  static void work();               // called by main loop(), prints any occured interrupt, checks if accel data is ready
+  static void accelDataHandler();   // gets and prints accel data
+  static void transientHandler();   // handles transient event = transient IRQ
+  static void motionHandler();      // handles free fall / motion event
+  static void orientationHandler(); // handles orientation change event
+  static void pulseHandler();         // handles pulse/tap event
 };
+
