@@ -6,7 +6,6 @@ http://koffein.org/E/FluMMA865x/
 ## Features
 
 This low-power device can trigger interrupts for four kinds of events
-
 * Free fall/Motions events when the device is dropping or moved,
 * Landscape/Portrait Front/Back events when the device is tilted on any of its 6 surfaces,
 * Pulse/Tap/Double Tap events if it is tapped, and
@@ -16,16 +15,16 @@ This low-power device can trigger interrupts for four kinds of events
 This is an experimental attempt to fully encapsulate a device driver in C++ classes
 and unions: 
 
-The 8-bit-registers of the device can be accessed by their 8-bit byte value .v:
+The 8-bit-registers of the device can be accessed by their 8-bit byte value .v:<br>
 `intSourceR.v = comms.readByte(FluMMA865xR::INT_SOURCE); // check if any interrupts are pending`
 
-or by their flag structure .f:
+or by their flag structure .f:<br>
 `if(intSourceR.f.SRC_FF_MT) Serial << F("Free fall / motion event detected!\n");`
 
 
 ## Quick Start
 
-1. Copy this library to you $HOME/sketchbook/libraries/ Folder.
+1. Copy this library to you $HOME/sketchbook/libraries/ Folder.<br>
   The resulting diretory tree should like this: sketchbook/libraries/FluMMA865x/
   and the FluMMA865x*.cpp and *.h files should reside directly there.
   
