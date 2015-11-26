@@ -21,6 +21,10 @@ The 8-bit-registers of the device can be accessed by their 8-bit byte value .v:<
 or by their flag structure .f:<br>
 `if(intSourceR.f.SRC_FF_MT) Serial << F("Free fall / motion event detected!\n");`
 
+This experiment is based on the work of 
+* Jim Lindblom at <a href="http://www.sparkfun.com">SparkFun</a> Electronics, who would like a beer if you like his driver</li>
+* <a href="https://github.com/kriswiner">Kris Winer</a>, wo added initialization, calibration and sleep mode stuff</li>
+
 
 ## Quick Start
 
