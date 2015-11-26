@@ -3,26 +3,28 @@ Flummy's Arduino Library / Device driver for the MMA865x I2C accelerometers<br>
 http://koffein.org/E/FluMMA865x/
 
 
+## Features
+
 This low-power device can trigger interrupts for four kinds of events
-*********************************************************************
-Free fall/Motions events when the device is dropping or moved,
-Landscape/Portrait Front/Back events when the device is tilted on any of its 6 surfaces,
-Pulse/Tap/Double Tap events if it is tapped, and
-Transient events (similiar to Motion, but read the Data sheet)
+
+* Free fall/Motions events when the device is dropping or moved,
+* Landscape/Portrait Front/Back events when the device is tilted on any of its 6 surfaces,
+* Pulse/Tap/Double Tap events if it is tapped, and
+* Transient events (similiar to Motion, but read the Data sheet)
 
 
 This is an experimental attempt to fully encapsulate a device driver in C++ classes
 and unions: 
 
 The 8-bit-registers of the device can be accessed by their 8-bit byte value .v:
-intSourceR.v = comms.readByte(FluMMA865xR::INT_SOURCE); // check if any interrupts are pending
+`intSourceR.v = comms.readByte(FluMMA865xR::INT_SOURCE); // check if any interrupts are pending`
 
 or by their flag structure .f:
-if(intSourceR.f.SRC_FF_MT) Serial << F("Free fall / motion event detected!\n");
+`if(intSourceR.f.SRC_FF_MT) Serial << F("Free fall / motion event detected!\n");`
 
 
-Quick Start
-***********
+## Quick Start
+
 1. Copy this library to you $HOME/sketchbook/libraries/ Folder.
   The resulting diretory tree should like this: sketchbook/libraries/FluMMA865x/
   and the FluMMA865x*.cpp and *.h files should reside directly there.
