@@ -1,5 +1,5 @@
 # FluMMA865x
-Flummy's Arduino Library / Device driver for the MMA865x I2C accelerometers
+Flummy's Arduino Library / Device driver for the MMA865x I2C accelerometers<br>
 http://koffein.org/E/FluMMA865x/
 
 
